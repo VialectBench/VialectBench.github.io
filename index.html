@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173f3a">
+    <meta
+      name="description"
+      content="VialectBench is a controlled benchmark for evaluating LLM robustness across six Vietnamese dialect groups and four language-understanding tasks."
+    >
+    <meta property="og:title" content="VialectBench — Vietnamese Dialect Robustness Benchmark">
+    <meta
+      property="og:description"
+      content="400 Standard Vietnamese sources, 2,400 human-written dialectal rewrites, six regional groups, four tasks, and ten evaluated LLMs."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vialectbench.github.io/">
+    <meta property="og:image" content="https://vialectbench.github.io/assets/model-performance.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>VialectBench — How Robust Are LLMs to Vietnamese Dialects?</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header" id="top">
+      <div class="nav-shell">
+        <a class="brand" href="#top" aria-label="VialectBench home">
+          <svg class="brand-mark" viewBox="0 0 42 42" aria-hidden="true">
+            <rect width="42" height="42" rx="12" fill="currentColor" />
+            <path d="M25 5c-4 4-5 8-3 12 2 4-2 7-5 10-4 3-3 8 2 9" />
+            <circle cx="15" cy="23" r="2.7" />
+          </svg>
+          <span>VialectBench</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <span></span><span></span><span></span><span class="sr-only">Open navigation</span>
+        </button>
+
+        <nav id="site-nav" aria-label="Primary navigation">
+          <a href="#overview">Overview</a>
+          <a href="#dataset">Dataset</a>
+          <a href="#method">Method</a>
+          <a href="#leaderboard">Leaderboard</a>
+          <a href="#findings">Findings</a>
+          <a class="nav-demo" href="#explorer">Explore data</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-noise" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <a class="paper-kicker" href="https://arxiv.org/abs/2608.10414" target="_blank" rel="noreferrer">
+              <span class="pulse"></span>
+              arXiv · August 2026
+              <span aria-hidden="true">↗</span>
+            </a>
+            <h1 id="hero-title"><span>Vialect</span>Bench</h1>
+            <p class="hero-subtitle">How Robust Are LLMs to Vietnamese Dialects?</p>
+            <p class="hero-lede">
+              A controlled, human-annotated benchmark for measuring whether language models keep the same
+              decisions when meaning stays fixed—but Vietnamese regional expression changes.
+            </p>
+
+            <div class="authors" role="group" aria-label="Authors">
+              <p>
+                <span>Minh Tran<sup>1,*†</sup></span>
+                <span>Trinh Chau<sup>2,†</sup></span>
+                <span>Thanh-Nhan Le<sup>3</sup></span>
+                <span>Nam Tran<sup>4</sup></span>
+                <span>Luan Thanh Nguyen<sup>5</sup></span>
+                <span>Cuong Dang<sup>6</sup></span>
+                <span>Duc Hoang<sup>7</sup></span>
+              </p>
+              <details class="affiliations">
+                <summary>Affiliations</summary>
+                <p>
+                  <sup>1</sup> University of Science, VNU-HCM ·
+                  <sup>2</sup> VNU University of Engineering and Technology ·
+                  <sup>3</sup> New York University Abu Dhabi ·
+                  <sup>4</sup> Independent Researcher ·
+                  <sup>5</sup> University of Information Technology, VNU-HCM ·
+                  <sup>6</sup> Virginia Tech · <sup>7</sup> MIT
+                </p>
+                <small><sup>†</sup> Equal contribution · <sup>*</sup> Corresponding author</small>
+              </details>
+            </div>
+
+            <div class="hero-actions" role="group" aria-label="Project resources">
+              <a class="button button-primary" href="https://arxiv.org/pdf/2608.10414" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h5M9 13h6M9 17h6M9 9h2" /></svg>
+                Paper
+              </a>
+              <a class="button" href="https://github.com/VialectBench" target="_blank" rel="noreferrer" aria-label="VialectBench code on GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18c-4 .8-4-2-5-2.5M14 22v-3.5c0-1 .1-1.5-.5-2 3-.3 6-1.5 6-6a4.6 4.6 0 0 0-1.2-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C6.6 3.8 5.6 4.1 5.6 4.1a4.3 4.3 0 0 0-.1 3.2 4.6 4.6 0 0 0-1.2 3.2c0 4.5 3 5.7 6 6-.4.4-.6.9-.5 1.6V22" /></svg>
+                Code
+              </a>
+              <a class="button" href="data/vialectbench.jsonl" download>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16" /></svg>
+                Dataset
+              </a>
+              <a class="button" href="#leaderboard">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v4c0 4-2 7-5 7s-5-3-5-7zM7 6H3c0 4 1.5 6 5 6M17 6h4c0 4-1.5 6-5 6" /></svg>
+                Leaderboard
+              </a>
+              <a class="button" href="#explorer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16M9 9v10M7 7h.01" /></svg>
+                Live explorer
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="map-label">
+              <span>VIETNAM</span>
+              <strong>one meaning, six regional lenses</strong>
+            </div>
+            <svg class="vietnam-map" viewBox="0 0 440 650" role="img" aria-labelledby="map-title map-desc">
+              <title id="map-title">VialectBench dialect map</title>
+              <desc id="map-desc">An abstract map of Vietnam marking six dialect groups from north to south.</desc>
+              <defs>
+                <linearGradient id="map-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#f5d58a" />
+                  <stop offset=".52" stop-color="#e97b55" />
+                  <stop offset="1" stop-color="#5eb3a2" />
+                </linearGradient>
+                <filter id="map-shadow" x="-30%" y="-20%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#0b2925" flood-opacity=".32" />
+                </filter>
+              </defs>
+              <path
+                class="map-shape"
+                filter="url(#map-shadow)"
+                d="M185 27c31 4 66 22 76 47 8 21-8 41-4 60 5 27 39 38 52 62 14 26 8 57-10 79-16 20-46 31-51 57-5 25 15 44 30 63 17 21 29 49 20 75-7 20-28 31-36 50-11 28 10 56 33 73 22 17 48 31 56 59 5 18-5 42-25 43-25 2-45-22-69-26-30-6-60 18-88 6-25-11-28-42-20-66 7-21 24-38 30-59 11-39-14-78-25-115-10-38-2-77-12-113-8-30-37-51-45-81-9-34 6-75 35-94 21-13 47-15 72-11z"
+              />
+              <path class="coast-line" d="M197 47c68 30 28 75 75 128 44 48 2 101-20 148-20 42 44 77 21 130-15 35 5 88 54 149" />
+
+              <g class="map-node" style="--delay: 0s" transform="translate(213 80)">
+                <circle r="10" /><path d="M15 0h79" /><text x="102" y="5">PNB</text><text class="node-note" x="102" y="23">Northern</text>
+              </g>
+              <g class="map-node" style="--delay: .15s" transform="translate(235 202)">
+                <circle r="10" /><path d="M15 0h57" /><text x="80" y="5">PNT1</text><text class="node-note" x="80" y="23">Thanh Hoa</text>
+              </g>
+              <g class="map-node" style="--delay: .3s" transform="translate(210 278)">
+                <circle r="10" /><path d="M-15 0h-72" /><text text-anchor="end" x="-96" y="5">PNT2</text><text class="node-note" text-anchor="end" x="-96" y="23">Nghe An · Ha Tinh</text>
+              </g>
+              <g class="map-node" style="--delay: .45s" transform="translate(235 350)">
+                <circle r="10" /><path d="M15 0h57" /><text x="80" y="5">PNT3</text><text class="node-note" x="80" y="23">Quang Binh · Hue</text>
+              </g>
+              <g class="map-node" style="--delay: .6s" transform="translate(235 440)">
+                <circle r="10" /><path d="M-15 0h-64" /><text text-anchor="end" x="-88" y="5">PNT4</text><text class="node-note" text-anchor="end" x="-88" y="23">South-Central</text>
+              </g>
+              <g class="map-node" style="--delay: .75s" transform="translate(287 572)">
+                <circle r="10" /><path d="M15 0h57" /><text x="80" y="5">PNN</text><text class="node-note" x="80" y="23">Southern</text>
+              </g>
+            </svg>
+            <div class="map-stamp" aria-hidden="true"><span>VI</span><small>six dialect groups</small></div>
+          </div>
+        </div>
+
+        <div class="shell hero-proof" role="group" aria-label="Benchmark headline statistics">
+          <div><strong>400</strong><span>Standard sources</span></div>
+          <div><strong>2,400</strong><span>Human rewrites</span></div>
+          <div><strong>6</strong><span>Dialect groups</span></div>
+          <div><strong>4</strong><span>NLP tasks</span></div>
+          <div><strong>10</strong><span>Evaluated LLMs</span></div>
+        </div>
+      </section>
+
+      <section class="section intro-section" id="overview">
+        <div class="shell intro-grid reveal">
+          <div>
+            <p class="eyebrow">The question</p>
+            <h2>Same meaning.<br><em>Same model decision?</em></h2>
+          </div>
+          <div class="intro-copy">
+            <p class="large-copy">
+              Vietnamese LLMs are usually tested on standardized writing, while everyday language varies across regions.
+              VialectBench isolates that gap: every source is paired with six human-written, meaning-preserving regional variants.
+            </p>
+            <p>
+              The task content, label, and defining evidence remain fixed. Only the task-bearing language changes—letting researchers
+              measure performance drops, harmful prediction flips, and task-specific brittleness under controlled variation.
+            </p>
+            <div class="takeaway">
+              <span class="takeaway-mark">↘</span>
+              <p><strong>Headline result</strong> Dialectal inputs reduce average performance by <b>2.82 points</b> across ten instruction-tuned models. No evaluated model is fully dialect-invariant.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dataset-section" id="dataset">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">Dataset at a glance</p>
+              <h2>A controlled, first-to-many benchmark</h2>
+            </div>
+            <p>One Standard Vietnamese source becomes six regional test cases while the underlying task and gold answer stay constant.</p>
+          </div>
+
+          <div class="stat-grid reveal">
+            <article><span>01</span><strong>400</strong><p>Standard Vietnamese source instances</p></article>
+            <article><span>02</span><strong>2,400</strong><p>Human-written dialectal rewrites</p></article>
+            <article><span>03</span><strong>2,800</strong><p>Total Standard + dialect evaluation inputs</p></article>
+            <article><span>04</span><strong>100</strong><p>Sources per task, evenly balanced</p></article>
+            <article><span>05</span><strong>6</strong><p>Fine-grained regional dialect groups</p></article>
+            <article><span>06</span><strong>5</strong><p>Variation families used for lexicon-guided sampling</p></article>
+          </div>
+
+          <div class="task-grid reveal" role="group" aria-label="Benchmark tasks">
+            <article class="task-card task-er">
+              <div class="task-icon">ER</div>
+              <div><h3>Emotion recognition</h3><p>Affective and pragmatic understanding</p><small>Source: UIT-VSMEC</small></div>
+            </article>
+            <article class="task-card task-nli">
+              <div class="task-icon">NLI</div>
+              <div><h3>Natural language inference</h3><p>Semantic relation judgment</p><small>Source: ViANLI</small></div>
+            </article>
+            <article class="task-card task-qa">
+              <div class="task-icon">QA</div>
+              <div><h3>Question answering</h3><p>Context-grounded evidence extraction</p><small>Source: ViQuAD</small></div>
+            </article>
+            <article class="task-card task-mcqa">
+              <div class="task-icon">MC</div>
+              <div><h3>Multiple-choice QA</h3><p>Answer selection over dialectalized options</p><small>Source: ViMMRC 2.0</small></div>
+            </article>
+          </div>
+
+          <div class="taxonomy reveal">
+            <div class="taxonomy-copy">
+              <p class="eyebrow">Regional taxonomy</p>
+              <h3>Central Vietnamese is not one homogeneous group.</h3>
+              <p>
+                The benchmark separates four Central subregions because lexical, pronominal, and discourse-marker variation is especially salient there. This fine-grained view exposes robustness gaps hidden by a single “Central” label.
+              </p>
+              <div class="variation-list" role="group" aria-label="Linguistic variation categories">
+                <span>Lexical</span><span>Functional</span><span>Pronominal</span><span>Discourse-level</span><span>Idiomatic</span>
+              </div>
+            </div>
+            <div class="dialect-list">
+              <article data-region="north"><b>PNB</b><div><strong>Northern Vietnamese</strong><span>Northern regional variety</span></div></article>
+              <article data-region="central"><b>PNT1</b><div><strong>North-Central I</strong><span>Thanh Hoa</span></div></article>
+              <article data-region="central"><b>PNT2</b><div><strong>North-Central II</strong><span>Nghe An · Ha Tinh</span></div></article>
+              <article data-region="central"><b>PNT3</b><div><strong>North-Central III</strong><span>Quang Binh · Quang Tri · Thua Thien Hue</span></div></article>
+              <article data-region="central"><b>PNT4</b><div><strong>South-Central</strong><span>Da Nang · Binh Thuan</span></div></article>
+              <article data-region="south"><b>PNN</b><div><strong>Southern Vietnamese</strong><span>Ho Chi Minh City · Southeast · Mekong Delta</span></div></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section explorer-section" id="explorer">
+        <div class="shell">
+          <div class="section-heading light reveal">
+            <div>
+              <p class="eyebrow">Live dataset explorer</p>
+              <h2>Read meaning-preserving variation side by side</h2>
+            </div>
+            <p>Browse the finalized benchmark directly. The Standard input stays on the left; choose any of its six regional rewrites on the right.</p>
+          </div>
+
+          <div class="explorer-app reveal" data-explorer>
+            <div class="explorer-toolbar">
+              <label>
+                <span>Task</span>
+                <select id="task-filter">
+                  <option value="all">All tasks</option>
+                  <option value="mcqa">MCQA</option>
+                  <option value="nli">NLI</option>
+                  <option value="qa">QA</option>
+                  <option value="sentiment">Emotion</option>
+                </select>
+              </label>
+              <label class="sample-picker">
+                <span>Example</span>
+                <select id="sample-select" aria-label="Choose a dataset example"><option>Loading benchmark…</option></select>
+              </label>
+              <div class="explorer-nav">
+                <button id="prev-sample" type="button" aria-label="Previous example">←</button>
+                <button id="next-sample" type="button" aria-label="Next example">→</button>
+              </div>
+            </div>
+
+            <div class="explorer-meta" id="explorer-meta">
+              <span>Loading finalized data…</span>
+            </div>
+
+            <div class="dialect-tabs" id="dialect-tabs" role="tablist" aria-label="Choose a dialect variant"></div>
+
+            <div class="comparison-grid" aria-live="polite">
+              <article class="text-card standard-text">
+                <header><span class="card-dot"></span><div><p>Control</p><h3>Standard Vietnamese</h3></div><b>STD</b></header>
+                <div class="text-card-body" id="standard-content"></div>
+              </article>
+              <div class="meaning-lock" aria-hidden="true"><span>≡</span><small>meaning<br>fixed</small></div>
+              <article class="text-card dialect-text">
+                <header><span class="card-dot"></span><div><p>Human rewrite</p><h3 id="dialect-title">Dialect variant</h3></div><b id="dialect-code">—</b></header>
+                <div class="text-card-body" id="dialect-content"></div>
+              </article>
+            </div>
+
+            <div class="explorer-footer">
+              <p><span class="status-dot"></span><strong id="dataset-status">Loading</strong> · Finalized, human-annotated JSONL</p>
+              <a href="data/vialectbench.jsonl" download>Download all 400 source groups <span>↓</span></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section method-section" id="method">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">Construction &amp; evaluation</p>
+              <h2>Human rewriting, paired evaluation</h2>
+            </div>
+            <p>A qualification, dual-review, and expert-adjudication workflow protects meaning while preserving authentic regional form.</p>
+          </div>
+
+          <figure class="paper-figure pipeline-figure reveal">
+            <img src="assets/annotation-pipeline.png" width="1046" height="463" alt="VialectBench annotation and quality-assurance pipeline" loading="lazy">
+            <figcaption><b>Annotation pipeline.</b> From 400 source instances through regional rewriting, independent review, adjudication, and post-hoc quality assurance.</figcaption>
+          </figure>
+
+          <div class="method-grid reveal">
+            <article><span>01</span><h3>Select</h3><p>Lexicon-guided sampling enriches dialect-sensitive cases while enforcing task-specific quality constraints.</p></article>
+            <article><span>02</span><h3>Rewrite</h3><p>Qualified speakers rewrite only task-bearing fields for their region; labels and defining evidence stay fixed.</p></article>
+            <article><span>03</span><h3>Review</h3><p>Two independent reviewers assess semantic preservation, dialect authenticity, and guideline compliance.</p></article>
+            <article><span>04</span><h3>Evaluate</h3><p>Ten models receive matched Standard and dialect inputs under deterministic direct prompting.</p></article>
+          </div>
+
+          <div class="quality-grid reveal">
+            <div class="quality-copy">
+              <p class="eyebrow">Quality assurance</p>
+              <h3>Qualification before annotation. Two reviews after.</h3>
+              <p>
+                Annotators qualify with <i>Q</i><sub>norm</sub> ≥ 0.85 and meaning-preservation rate ≥ 0.90. Borderline review outcomes are sent to expert adjudication rather than automatically accepted.
+              </p>
+            </div>
+            <div class="quality-bars" role="group" aria-label="Dual reviewer outcomes">
+              <div><p><b>Semantic preservation</b><span>72.1% fully passed</span></p><div class="bar"><i class="value-721"></i></div><small>21.4% partial · 6.5% no</small></div>
+              <div><p><b>Dialect authenticity</b><span>58.4% fully passed</span></p><div class="bar"><i class="value-584"></i></div><small>36.6% partial · 5.0% no</small></div>
+              <div><p><b>Guideline compliance</b><span>76.2% fully passed</span></p><div class="bar"><i class="value-762"></i></div><small>22.3% partial · 1.5% no</small></div>
+            </div>
+          </div>
+
+          <div class="protocol reveal">
+            <div>
+              <p class="eyebrow">Evaluation protocol</p>
+              <h3>Controlled input change, deterministic generation</h3>
+            </div>
+            <div class="protocol-list">
+              <article><b>01</b><p><strong>Same task instruction</strong><span>Every matched Standard–dialect input receives the same task-specific prompt.</span></p></article>
+              <article><b>02</b><p><strong>Deterministic decoding</strong><span>No sampling for open models; temperature 0 for GPT-4o.</span></p></article>
+              <article><b>03</b><p><strong>Task-aware scoring</strong><span>Accuracy for ER, NLI, and MCQA; token-level F1 for extractive QA.</span></p></article>
+              <article><b>04</b><p><strong>Paired robustness</strong><span>Performance gap, harmful flip rate, and confidence erosion where comparable.</span></p></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section leaderboard-section" id="leaderboard">
+        <div class="shell">
+          <div class="section-heading light reveal">
+            <div>
+              <p class="eyebrow">Leaderboard</p>
+              <h2>Performance across regional variants</h2>
+            </div>
+            <p>Cross-task macro-averages from direct prompting. Sort the table to compare absolute capability and dialect stability together.</p>
+          </div>
+
+          <div class="leaderboard-controls reveal">
+            <div class="metric-note"><span>↑</span> Higher performance is better <i></i><span class="down">↓</span> Lower gap is better</div>
+            <label>Sort by
+              <select id="leaderboard-sort">
+                <option value="dialect" selected>Dialect mean</option>
+                <option value="standard">Standard score</option>
+                <option value="gap">Smallest gap</option>
+                <option value="pnt3">PNT3 score</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="table-wrap reveal">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th><th scope="col">Model</th><th scope="col">Standard</th><th scope="col">PNB</th>
+                  <th scope="col">PNT1</th><th scope="col">PNT2</th><th scope="col">PNT3</th><th scope="col">PNT4</th>
+                  <th scope="col">PNN</th><th scope="col">Dialect mean</th><th scope="col">Gap ↓</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body"></tbody>
+            </table>
+          </div>
+          <p class="table-caption reveal">
+            Scores are percentages. Each model’s row macro-averages MCQA, NLI, QA, and ER; QA uses token-level F1 while the other tasks use accuracy, so the cross-task mean is descriptive rather than a unified metric. Gap = Standard − dialect mean. GPT-4o uses the <code>gpt-4o-2024-08-06</code> snapshot.
+          </p>
+        </div>
+      </section>
+
+      <section class="section findings-section" id="findings">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">What the benchmark reveals</p>
+              <h2>Robustness failures are concentrated, not uniform</h2>
+            </div>
+            <p>The strongest signal is regional and task-dependent: Central subgroups, particularly PNT2 and PNT3, expose the largest gaps.</p>
+          </div>
+
+          <div class="finding-stats reveal">
+            <article><strong>−2.82</strong><span>points</span><p>Average performance change across dialect inputs</p></article>
+            <article class="accent"><strong>−6.17</strong><span>points</span><p>Largest dialect gap, under PNT3</p></article>
+            <article><strong>−5.21</strong><span>points</span><p>QA—the most affected task on average</p></article>
+            <article><strong>6.54%</strong><span>HFR</span><p>Central group harmful-flip rate</p></article>
+          </div>
+
+          <div class="heatmap-block reveal">
+            <div class="heatmap-copy">
+              <p class="eyebrow">Task × dialect gap</p>
+              <h3>QA degrades across every Central subgroup.</h3>
+              <p>
+                Average Standard-minus-dialect performance gap across ten models. Positive values indicate degradation; negative values indicate a small improvement.
+              </p>
+              <div class="heat-legend"><span>Improvement</span><i></i><i></i><i></i><i></i><i></i><span>Larger drop</span></div>
+            </div>
+            <div class="heatmap" role="img" aria-label="Performance gap heatmap by task and dialect">
+              <div class="corner">Gap (points)</div><b>PNB</b><b>PNN</b><b>PNT1</b><b>PNT2</b><b>PNT3</b><b>PNT4</b>
+              <b>MCQA</b><span data-v="0.30">0.30</span><span data-v="1.80">1.80</span><span data-v="3.50">3.50</span><span data-v="3.30">3.30</span><span data-v="4.30">4.30</span><span data-v="2.10">2.10</span>
+              <b>NLI</b><span data-v="-1.50">−1.50</span><span data-v="2.40">2.40</span><span data-v="1.60">1.60</span><span data-v="1.40">1.40</span><span data-v="4.20">4.20</span><span data-v="0.60">0.60</span>
+              <b>QA</b><span data-v="0.21">0.21</span><span data-v="2.33">2.33</span><span data-v="4.02">4.02</span><span data-v="8.31">8.31</span><span data-v="9.76">9.76</span><span data-v="6.65">6.65</span>
+              <b>ER</b><span data-v="-0.70">−0.70</span><span data-v="0.70">0.70</span><span data-v="-0.20">−0.20</span><span data-v="5.90">5.90</span><span data-v="6.40">6.40</span><span data-v="0.40">0.40</span>
+              <b>Mean</b><span data-v="-0.42">−0.42</span><span data-v="1.81">1.81</span><span data-v="2.23">2.23</span><span data-v="4.73">4.73</span><span data-v="6.17">6.17</span><span data-v="2.44">2.44</span>
+            </div>
+          </div>
+
+          <figure class="paper-figure results-figure reveal">
+            <img src="assets/model-performance.png" width="1163" height="449" alt="Regional performance and harmful-flip rates for ten evaluated models" loading="lazy">
+            <figcaption>
+              <b>Capability and stability are distinct.</b> GPT-4o combines the highest absolute performance with the smallest average dialect gap. Vistral-7B also appears relatively stable, but at a much lower score—showing why gap alone is not enough.
+            </figcaption>
+          </figure>
+
+          <div class="insights-grid reveal">
+            <article><span>01</span><h3>PNT3 is the hardest group</h3><p>It causes the largest degradation for nine of ten evaluated models; Qwen2.5-3B drops 10.4 points.</p></article>
+            <article><span>02</span><h3>QA is broadly vulnerable</h3><p>Its questions must align with evidence kept in Standard Vietnamese, and all four Central groups reduce mean QA performance.</p></article>
+            <article><span>03</span><h3>Flips reveal practical harm</h3><p>Central variants most often turn a correct Standard prediction into an incorrect dialect prediction.</p></article>
+            <article><span>04</span><h3>Small gaps can mislead</h3><p>A flat score can reflect stable failure rather than robust understanding; absolute capability must be considered too.</p></article>
+          </div>
+
+          <div class="failure-case reveal">
+            <div class="failure-copy">
+              <p class="eyebrow">Illustrative failure</p>
+              <h3>One word, two very different interpretations.</h3>
+              <p>
+                In the Central expression <q>Bác sĩ dặn ăn chi?</q>, <em>chi</em> means “what.” The model instead associates it with a limb or the compound <em>chi phí</em> (“cost”), producing an unfaithful response to a meaning-equivalent question.
+              </p>
+              <div class="phrase-pair"><span><small>Central</small>Bác sĩ dặn ăn <mark>chi</mark>?</span><b>≡</b><span><small>Standard</small>Bác sĩ dặn ăn <mark>gì</mark>?</span></div>
+            </div>
+            <figure><img src="assets/failure-case.jpg" width="847" height="1307" alt="Paper illustration of a model misinterpreting the Central Vietnamese word chi" loading="lazy"><figcaption>Figure 1 from the paper.</figcaption></figure>
+          </div>
+
+          <aside class="limitations reveal">
+            <strong>Read results with care.</strong>
+            <p>Lexicon-guided sampling intentionally enriches dialect-sensitive phenomena and may not match their natural frequency. The intrinsic perplexity analysis uses one reference scorer, and the study does not test dialect-normalization mitigations.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section citation-section" id="citation">
+        <div class="shell citation-grid reveal">
+          <div>
+            <p class="eyebrow">Citation</p>
+            <h2>Build more dialect-aware Vietnamese NLP.</h2>
+            <p>If VialectBench supports your work, please cite the arXiv paper.</p>
+            <a class="text-link" href="https://doi.org/10.48550/arXiv.2608.10414" target="_blank" rel="noreferrer">doi.org/10.48550/arXiv.2608.10414 ↗</a>
+          </div>
+          <div class="bibtex-card">
+            <div class="bibtex-head"><span>BibTeX</span><button id="copy-bibtex" type="button">Copy <span aria-hidden="true">⧉</span></button></div>
+            <pre id="bibtex"><code>@misc{tran2026robust,
+  title         = {How Robust Are LLMs to Vietnamese Dialects?},
+  author        = {Tran, Minh and Chau, Trinh and Le, Thanh-Nhan and
+                   Tran, Nam and Nguyen, Luan Thanh and Dang, Cuong and
+                   Hoang, Duc},
+  year          = {2026},
+  eprint        = {2608.10414},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  doi           = {10.48550/arXiv.2608.10414}
+}</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell footer-grid">
+        <a class="brand footer-brand" href="#top">
+          <svg class="brand-mark" viewBox="0 0 42 42" aria-hidden="true"><rect width="42" height="42" rx="12" fill="currentColor" /><path d="M25 5c-4 4-5 8-3 12 2 4-2 7-5 10-4 3-3 8 2 9" /><circle cx="15" cy="23" r="2.7" /></svg>
+          <span>VialectBench</span>
+        </a>
+        <p>Meaning stays. Language varies. Models should remain reliable.</p>
+        <div><a href="https://arxiv.org/abs/2608.10414" target="_blank" rel="noreferrer">Paper</a><a href="#leaderboard">Results</a><a href="#explorer">Explorer</a><a href="https://github.com/VialectBench" target="_blank" rel="noreferrer">GitHub</a></div>
+      </div>
+      <div class="shell footer-bottom"><span>© 2026 VialectBench team</span><span>Static, open-web project page</span></div>
+    </footer>
+  </body>
+</html>
