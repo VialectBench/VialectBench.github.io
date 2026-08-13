@@ -370,14 +370,14 @@ function initializeExplorer() {
   function loadDataset() {
     if (loadingStarted) return;
     loadingStarted = true;
-    fetch("data/vialectbench.jsonl")
+    fetch("data/vialectbench-example-32.jsonl")
       .then((response) => {
         if (!response.ok) throw new Error(`Dataset request failed (${response.status})`);
         return response.text();
       })
       .then((text) => {
         state.cases = parseJsonl(text);
-        elements.status.textContent = `${state.cases.length} source groups loaded`;
+        elements.status.textContent = `${state.cases.length} public examples loaded`;
         applyTaskFilter("MCQA_0010_1");
       })
       .catch((error) => {
