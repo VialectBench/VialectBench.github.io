@@ -294,7 +294,7 @@ h3 {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  padding: 146px 0 0;
+  padding: 128px 0 0;
   color: var(--white);
   background:
     radial-gradient(circle at 77% 25%, rgba(239, 181, 85, 0.14), transparent 28%),
@@ -325,10 +325,10 @@ h3 {
 .hero-grid {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr);
-  gap: 56px;
-  align-items: center;
+}
+
+.hero-copy {
+  max-width: 1180px;
 }
 
 .paper-kicker {
@@ -369,10 +369,10 @@ h3 {
 .hero h1 {
   margin: 0;
   font-family: "Newsreader", Georgia, serif;
-  font-size: clamp(4.6rem, 9vw, 8.3rem);
+  font-size: clamp(5.2rem, 10vw, 8.8rem);
   font-weight: 550;
   letter-spacing: -0.075em;
-  line-height: 0.82;
+  line-height: 0.86;
 }
 
 .hero h1 span {
@@ -380,7 +380,7 @@ h3 {
 }
 
 .hero-subtitle {
-  margin: 27px 0 16px;
+  margin: 24px 0 0;
   color: rgba(255, 255, 255, 0.95);
   font-family: "Newsreader", Georgia, serif;
   font-size: clamp(1.65rem, 3vw, 2.5rem);
@@ -389,9 +389,17 @@ h3 {
   line-height: 1.15;
 }
 
+.hero-mainline {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
+  gap: 64px;
+  margin-top: 28px;
+  align-items: start;
+}
+
 .hero-lede {
   max-width: 690px;
-  margin-bottom: 25px;
+  margin: 0 0 22px;
   color: rgba(255, 255, 255, 0.68);
   font-size: 1.04rem;
   line-height: 1.7;
@@ -399,7 +407,7 @@ h3 {
 
 .authors {
   max-width: 760px;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 
 .authors > p {
@@ -436,6 +444,52 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.hero-primary .hero-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 620px;
+}
+
+.hero-primary .hero-actions .button {
+  justify-content: center;
+}
+
+.hero-acknowledgements {
+  padding: 27px 30px 25px;
+  background: rgba(6, 31, 27, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(4, 24, 21, 0.18);
+}
+
+.hero-acknowledgements .eyebrow {
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+
+.hero-acknowledgements h2 {
+  margin-bottom: 15px;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-acknowledgements p:not(.eyebrow) {
+  margin: 0 0 11px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.76rem;
+  line-height: 1.56;
+}
+
+.hero-acknowledgements p:last-child {
+  margin-bottom: 0;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-acknowledgements strong {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .button {
@@ -479,138 +533,12 @@ h3 {
   border-color: #f6c774;
 }
 
-.hero-visual {
-  position: relative;
-  height: 660px;
-}
-
-.map-label {
-  position: absolute;
-  z-index: 2;
-  top: 12px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.map-label span {
-  color: var(--gold);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-}
-
-.map-label strong {
-  max-width: 180px;
-  margin-top: 3px;
-  color: rgba(255, 255, 255, 0.66);
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-.vietnam-map {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.map-geography {
-  filter: drop-shadow(0 14px 16px rgba(7, 30, 27, 0.24));
-}
-
-.archipelago-label text {
-  fill: var(--gold);
-  font-family: "DM Sans", sans-serif;
-  font-size: 7.5px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.archipelago-label .island-note {
-  fill: rgba(255, 255, 255, 0.5);
-  font-size: 5.5px;
-  font-weight: 500;
-  letter-spacing: 0;
-}
-
-.map-node circle {
-  fill: var(--forest-2);
-  stroke: var(--white);
-  stroke-width: 3;
-  animation: node-pop 0.7s both;
-  animation-delay: calc(0.7s + var(--delay));
-  transform-origin: center;
-}
-
-.map-node path {
-  stroke: rgba(255, 255, 255, 0.56);
-  stroke-width: 1.5;
-}
-
-.map-node text {
-  fill: var(--white);
-  font-family: "DM Sans", sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.map-node .node-note {
-  fill: rgba(255, 255, 255, 0.52);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0;
-}
-
-@keyframes node-pop {
-  from { opacity: 0; transform: scale(0); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.map-stamp {
-  position: absolute;
-  bottom: 14px;
-  left: 0;
-  display: grid;
-  width: 94px;
-  height: 94px;
-  place-items: center;
-  color: var(--gold);
-  border: 1px solid rgba(239, 181, 85, 0.5);
-  border-radius: 50%;
-  transform: rotate(-8deg);
-}
-
-.map-stamp::after {
-  position: absolute;
-  inset: 5px;
-  border: 1px dashed rgba(239, 181, 85, 0.42);
-  border-radius: 50%;
-  content: "";
-}
-
-.map-stamp span {
-  margin-top: 13px;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 1.8rem;
-  line-height: 1;
-}
-
-.map-stamp small {
-  margin-top: -16px;
-  font-size: 0.47rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .hero-proof {
   position: relative;
   z-index: 2;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  margin-top: 45px;
+  margin-top: 50px;
   border-top: 1px solid rgba(255, 255, 255, 0.13);
 }
 
@@ -2074,14 +2002,9 @@ footer {
 
 /* Responsive */
 @media (max-width: 1080px) {
-  .hero-grid {
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 20px;
-  }
-
-  .hero-visual {
-    transform: scale(0.88);
-    transform-origin: center right;
+  .hero-mainline {
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 0.82fr);
+    gap: 34px;
   }
 
   .task-grid,
@@ -2180,15 +2103,13 @@ footer {
     padding-top: 120px;
   }
 
-  .hero-grid {
+  .hero-mainline {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
-  .hero-visual {
-    width: min(100%, 560px);
-    height: 570px;
-    margin: 0 auto;
-    transform: none;
+  .hero-acknowledgements {
+    max-width: 720px;
   }
 
   .hero-proof {
@@ -2278,17 +2199,17 @@ footer {
     justify-content: center;
   }
 
-  .hero-visual {
-    height: 510px;
-    margin-top: 20px;
+  .hero-primary .hero-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
   }
 
-  .map-label {
-    left: 14px;
+  .hero-mainline {
+    margin-top: 22px;
   }
 
-  .map-stamp {
-    right: 10px;
+  .hero-acknowledgements {
+    padding: 23px 22px;
   }
 
   .stat-grid,
